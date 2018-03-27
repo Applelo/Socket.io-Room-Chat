@@ -7,13 +7,13 @@ Ionic App Chat app with rooms work thanks to websocket server in Node JS and Soc
 
 ## How to use it
 
-###Server
+### Server
 
 1. Do the `npm i` to install project dependencies.
 2. Launch websocket server with `npm run start` command.
 3. The server will be available to localhost:3000 (yourip:3000)
 
-###Ionic Application
+### Ionic Application
 
 1. Do the `npm i` to install project dependencies.
 2. Use `ionic serve --lab` to test magic of websocket
