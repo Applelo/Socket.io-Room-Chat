@@ -25,7 +25,7 @@ export class ChooseRoomPage {
   }
 
     roomSelected(room) {
-        this.navCtrl.push(MessagesPage, room);
+        this.navCtrl.push(MessagesPage, {room});
     }
 
     logout() {

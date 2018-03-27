@@ -23,7 +23,7 @@
     <ion-searchbar>
     </ion-searchbar>
     <ion-list>
-        <button ion-item *ngFor="let room of roomsProvider.rooms, index" (click)="roomSelected(room.id)">
+        <button ion-item *ngFor="let room of roomsProvider.rooms" (click)="roomSelected(room)">
             <h2>{{ room.name }}</h2>
             <p>Number of participants : {{ room.numUsers }}</p>
         </button>

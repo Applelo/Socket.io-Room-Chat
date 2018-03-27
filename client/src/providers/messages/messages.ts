@@ -1,17 +1,28 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Socket } from 'ng-socket-io';
 
-/*
-  Generated class for the MessagesProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
 @Injectable()
 export class MessagesProvider {
 
-  constructor(public http: HttpClient) {
-    console.log('Hello MessagesProvider Provider');
+    private _messages;
+
+    constructor(socket: Socket) {
+      socket.on('new message', message => {
+          this._messages.push(message);
+      });
+
+      socket.on('get messages', messages => {
+          this._messages = messages.messages;
+      });
+
   }
 
+
+    get messages(): [{ user_id: number; message: string }] {
+        return this._messages;
+    }
+
+    set messages(value: [{ user_id: number; message: string }]) {
+        this._messages = value;
+    }
 }

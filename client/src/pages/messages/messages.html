@@ -15,12 +15,14 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-item>
-      <h2>Finn</h2>
-      <p>I've had a pretty messed up day. If we just...</p>
-    </ion-item>
-      <ion-item>
-          <p style="text-align:  center"><em>Gerard is connected</em></p>
+       <ion-item *ngFor="let message of messagesProvider.messages">
+           <ng-template *ngIf="message.user_id; else serverMessage">
+               <h2>{{ message.user_id }}</h2>
+               <p>{{ message.message }}</p>
+           </ng-template>
+           <ng-template #serverMessage>
+               <p class="server-message">{{ message.message }}</p>
+           </ng-template>
       </ion-item>
   </ion-list>
 </ion-content>

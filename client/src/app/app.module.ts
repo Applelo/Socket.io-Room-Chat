@@ -26,7 +26,7 @@ const config: SocketIoConfig = {
       MessagesPage
   ],
   imports: [
-    BrowserModule,
+      BrowserModule,
       SocketIoModule.forRoot(config),
       IonicModule.forRoot(MyApp)
   ],

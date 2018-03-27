@@ -16,7 +16,8 @@ var rooms = [];
 //[{
 //     'id': 1,
 //    'name': 'hello',
-//    'numUsers': 1
+//    'numUsers': 1,
+//      'user_id' : 1
 //}]
 var messages = {};
 //{
@@ -58,35 +59,41 @@ io.on('connection', function (socket) {
         let data = {
             id: idRoom,
             name:room,
-            numUsers: 1
+            numUsers: 0
         };
 
         rooms.push(data);
-        io.sockets.emit('new room', rooms);//emit to all people
+        io.sockets.emit('update room', rooms);//emit to all people
         socket.emit('go room', data);//emit only to client
+        messages[idRoom] = [];
         idRoom++;
     });
 
-    socket.on('join room', function (room, room_index, username) {
+    socket.on('join room', function (room) {
         socket.join(room.id);
-        io.to(room.id).emit('new message',
+        socket.broadcast.to(room.id).emit('new message',
             {
                 'user_id':0,
-                'message': username + ' join the room ' + room.name
+                'message': socket.username + ' join the room ' + room.name
             }
         );
-        rooms[room_index].numUsers++;
+        socket.emit('get messages', {
+            messages: messages[room.id]
+        });
+        rooms.find(x => x.id === room.id).numUsers++;
+        io.sockets.emit('update room', rooms);//emit to all people
     });
 
-    socket.on('leave room', function (room, room_index, username) {
+    socket.on('leave room', function (room) {
         socket.leave(room.id);
-        io.to(room.id).emit('new message',
+        socket.broadcast.to(room.id).emit('new message',
             {
                 'user_id':0,
-                'message': username + ' leave the room ' + room.name
+                'message': socket.username + ' leave the room ' + room.name
             }
         );
-        rooms[room_index].numUsers--;
+        rooms.find(x => x.id === room.id).numUsers--;
+        io.sockets.emit('update room', rooms);//emit to all people
     });
 
 
