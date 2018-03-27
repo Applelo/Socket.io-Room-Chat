@@ -10,6 +10,7 @@ var users = [];
 //{
 //    1: [{
 //          'username' : 'michel',
+//          'room_creator' :[1, 2],
 //          }]
 //}]
 var rooms = [];
@@ -17,7 +18,7 @@ var rooms = [];
 //     'id': 1,
 //    'name': 'hello',
 //    'numUsers': 1,
-//      'user_id' : 1
+//     'users' : [1, 2, 3, 4]
 //}]
 var messages = {};
 //{
