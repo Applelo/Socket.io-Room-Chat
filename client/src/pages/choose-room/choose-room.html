@@ -1,0 +1,35 @@
+<!--
+  Generated template for the ChooseRoomPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar hideBackButton="true">
+    <ion-title>Choose room</ion-title>
+
+      <ion-buttons end>
+          <button (click)="logout()" ion-button icon-only>
+              Logout <ion-icon name="log-out"></ion-icon>
+          </button>
+      </ion-buttons>
+  </ion-navbar>
+
+
+</ion-header>
+
+<ion-content padding>
+    <ion-searchbar>
+    </ion-searchbar>
+    <ion-list>
+        <button ion-item *ngFor="let room of roomsProvider.rooms, index" (click)="roomSelected(room.id)">
+            <h2>{{ room.name }}</h2>
+            <p>Number of participants : {{ room.numUsers }}</p>
+        </button>
+    </ion-list>
+    <div class="bottom-button">
+        <button ion-button block (click)="createRoom()">Create Room</button>
+    </div>
+
+</ion-content>

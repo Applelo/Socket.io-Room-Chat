@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Websocket
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="todo" (ngSubmit)="logForm()">
+    <ion-item>
+      <ion-label>Pseudo</ion-label>
+      <ion-input type="text" formControlName="pseudo" name="pseudo"></ion-input>
+    </ion-item>
+    <button ion-button [disabled]="!todo.valid" type="submit" block>Connection</button>
+  </form>
+
+</ion-content>

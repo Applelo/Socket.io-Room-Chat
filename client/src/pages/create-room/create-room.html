@@ -1,0 +1,24 @@
+<!--
+  Generated template for the CreateRoomPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Create Room</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <form [formGroup]="todo" (ngSubmit)="createRoomForm()">
+    <ion-item>
+      <ion-label>Name</ion-label>
+      <ion-input type="text" formControlName="name" name="name"></ion-input>
+    </ion-item>
+    <button ion-button [disabled]="!todo.valid" type="submit" block>Create</button>
+  </form>
+</ion-content>
