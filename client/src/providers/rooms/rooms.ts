@@ -12,7 +12,7 @@ export class RoomsProvider {
     private _rooms;
 
   constructor(public socket: Socket) {
-      this.socket.on('update room', rooms => {
+      this.socket.on('update rooms', rooms => {
           this._rooms = rooms;
       });
   }

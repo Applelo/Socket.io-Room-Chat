@@ -17,12 +17,11 @@ export class MessagesProvider {
 
   }
 
-
-    get messages(): [{ user_id: number; message: string }] {
+    get messages():[{}] {
         return this._messages;
     }
 
-    set messages(value: [{ user_id: number; message: string }]) {
+    set messages(value: [{}]) {
         this._messages = value;
     }
 }

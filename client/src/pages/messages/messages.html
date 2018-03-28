@@ -13,16 +13,40 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding id="chat">
   <ion-list>
        <ion-item *ngFor="let message of messagesProvider.messages">
-           <ng-template *ngIf="message.user_id; else serverMessage">
-               <h2>{{ message.user_id }}</h2>
+           <div *ngIf="message.user_id > 0; else serverMessage" [ngClass]="message.user_id === usersProvider.user_id ? 'my-message' : ''">
+               <h2>{{ message.username }}</h2>
                <p>{{ message.message }}</p>
-           </ng-template>
+           </div>
            <ng-template #serverMessage>
                <p class="server-message">{{ message.message }}</p>
            </ng-template>
       </ion-item>
   </ion-list>
 </ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <form [formGroup]="todo" (ngSubmit)="sendMessage()">
+            <ion-grid class="input-wrap">
+                <ion-row>
+                    <ion-col col-10>
+                        <ion-textarea
+                                    name="message"
+                                    formControlName="message"
+                                    placeholder="Entrez votre message ici">
+                        </ion-textarea>
+                    </ion-col>
+                    <ion-col col-2>
+                        <button type="submit" ion-button clear icon-only item-right>
+                            <ion-icon name="send"></ion-icon>
+                        </button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </form>
+    </ion-toolbar>
+</ion-footer>
+

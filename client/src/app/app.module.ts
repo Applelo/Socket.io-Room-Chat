@@ -12,6 +12,7 @@ import {CreateRoomPage} from "../pages/create-room/create-room";
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import { RoomsProvider } from '../providers/rooms/rooms';
 import { MessagesProvider } from '../providers/messages/messages';
+import { UsersProvider } from '../providers/users/users';
 const config: SocketIoConfig = {
     url: 'http://localhost:3000',
     options: {}
@@ -43,7 +44,8 @@ const config: SocketIoConfig = {
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     RoomsProvider,
-    MessagesProvider
+    MessagesProvider,
+    UsersProvider
   ]
 })
 export class AppModule {}

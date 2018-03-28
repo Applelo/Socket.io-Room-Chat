@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 import {Validators, FormBuilder, FormGroup } from '@angular/forms';
 import {ChooseRoomPage} from "../choose-room/choose-room";
 import {Socket} from 'ng-socket-io';
+import {UsersProvider} from "../../providers/users/users";
 
 @Component({
   selector: 'page-home',
@@ -11,7 +12,7 @@ import {Socket} from 'ng-socket-io';
 export class HomePage {
     todo : FormGroup;
 
-    constructor(public navCtrl: NavController, private formBuilder: FormBuilder, private socket: Socket) {
+    constructor(public navCtrl: NavController, private formBuilder: FormBuilder, private socket: Socket, public usersProvider: UsersProvider) {
         this.todo = this.formBuilder.group({
             pseudo: ['', Validators.required],
         });
