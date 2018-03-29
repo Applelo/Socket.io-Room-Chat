@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 export class UsersProvider {
 
     private _user_id:number;
-    private _users:[{}];
+    private _users:[{id:number, username:string, rooms_creator:[number]}];
 
   constructor(socket: Socket) {
       socket.on('login', data => {
@@ -15,8 +15,7 @@ export class UsersProvider {
 
   }
 
-
-    get user_id(): number {
+    get user_id():number {
         return this._user_id;
     }
 
@@ -24,11 +23,11 @@ export class UsersProvider {
         this._user_id = value;
     }
 
-    get users(): [{}] {
+    get users():[{id:number, username:string, rooms_creator:[number]}] {
         return this._users;
     }
 
-    set users(value: [{}]) {
+    set users(value:[{id:number, username:string, rooms_creator:[number]}]) {
         this._users = value;
     }
 }

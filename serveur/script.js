@@ -10,7 +10,7 @@ var users = [];
 //[{
 //          'id" : 1
 //          'username' : 'michel',
-//          'room_creator' : [1, 2],
+//          'rooms_creator' : [1, 2],
 //          }
 //}]
 var rooms = [];
@@ -18,7 +18,7 @@ var rooms = [];
 //     'id': 1,
 //    'name': 'hello',
 //    'numUsers': 1,
-//     'users' : [1, 2, 3, 4]
+//     'users' : [1, 2, 3, 4],
 //}]
 var messages = {};
 //{
@@ -111,12 +111,22 @@ io.on('connection', function (socket) {
         socket.nsp.to(data.room.id).emit('new message', message);
     });
 
+    socket.on('start typing', function(room) {
+        socket.emit('new typing', socket.user_id);
+    });
+
+    socket.on('stop typing', function(room) {
+        socket.emit('end typing', socket.user_id);
+    });
+
+
 
     // when the user disconnects.. perform this
-    socket.on('disconnect', function (user_id) {
+    socket.on('disconnect', function () {
         if (addedUser) {
             numUsers--;
-
+            let index = users.indexOf(users.find(x => x.id === socket.user_id));
+            users.splice(index, 1);
             io.sockets.emit('update users', users);//emit to all people
 
             // echo globally that this client has left

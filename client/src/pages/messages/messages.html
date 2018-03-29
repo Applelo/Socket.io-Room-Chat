@@ -13,7 +13,7 @@
 </ion-header>
 
 
-<ion-content padding id="chat">
+<ion-content #content padding>
   <ion-list>
        <ion-item *ngFor="let message of messagesProvider.messages">
            <div *ngIf="message.user_id > 0; else serverMessage" [ngClass]="message.user_id === usersProvider.user_id ? 'my-message' : ''">
@@ -25,6 +25,7 @@
            </ng-template>
       </ion-item>
   </ion-list>
+    <p class="users-typing" [ngClass]="usersTyping !== undefined && usersTyping.length > 0 ? 'active' : ''">{{sentenceTypying}} writing...</p>
 </ion-content>
 
 <ion-footer>
@@ -34,6 +35,7 @@
                 <ion-row>
                     <ion-col col-10>
                         <ion-textarea
+                                (input)="typingMessage()"
                                     name="message"
                                     formControlName="message"
                                     placeholder="Entrez votre message ici">
