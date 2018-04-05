@@ -7,6 +7,16 @@ page-messages {
     text-align: right;
   }
 
+  ion-label > div > p {
+    white-space: normal;
+  }
+
+  ion-footer > ion-toolbar {
+    button {
+      float: right;
+    }
+  }
+
   .users-typing {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;

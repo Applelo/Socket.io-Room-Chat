@@ -6,24 +6,22 @@
 -->
 <ion-header>
 
-  <ion-navbar hideBackButton="true">
+  <ion-navbar>
     <ion-title>Choose room</ion-title>
-
-      <ion-buttons end>
-          <button (click)="logout()" ion-button icon-only>
-              Logout <ion-icon name="log-out"></ion-icon>
-          </button>
-      </ion-buttons>
   </ion-navbar>
 
 
 </ion-header>
 
 <ion-content padding>
-    <ion-searchbar>
+    <ion-searchbar
+            [(ngModel)]="mySearchBar"
+            (ionInput)="onSearchBarInput()"
+            [showCancelButton]="shouldShowCancel"
+    >
     </ion-searchbar>
     <ion-list>
-        <button ion-item *ngFor="let room of roomsProvider.rooms" (click)="roomSelected(room)">
+        <button ion-item *ngFor="let room of (mySearchBar.length > 0) ? roomsProvider.searchRooms : roomsProvider.roomsNotJoin" (click)="roomSelected(room)">
             <h2>{{ room.name }}</h2>
             <p>Number of participants : {{ room.numUsers }}</p>
         </button>

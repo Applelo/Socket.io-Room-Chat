@@ -6,13 +6,16 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { MyRoomsPage} from "../pages/my-rooms/my-rooms";
 import { ChooseRoomPage} from "../pages/choose-room/choose-room";
 import {MessagesPage} from "../pages/messages/messages";
+import {MessagesMenu} from "../pages/messages/messages-menu";
 import {CreateRoomPage} from "../pages/create-room/create-room";
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import { RoomsProvider } from '../providers/rooms/rooms';
 import { MessagesProvider } from '../providers/messages/messages';
 import { UsersProvider } from '../providers/users/users';
+import {UsersListPage} from "../pages/users-list/users-list";
 const config: SocketIoConfig = {
     url: 'http://localhost:3000',
     options: {}
@@ -22,9 +25,12 @@ const config: SocketIoConfig = {
   declarations: [
       MyApp,
       HomePage,
+      MyRoomsPage,
       ChooseRoomPage,
       CreateRoomPage,
-      MessagesPage
+      MessagesPage,
+      MessagesMenu,
+      UsersListPage
   ],
   imports: [
       BrowserModule,
@@ -35,9 +41,12 @@ const config: SocketIoConfig = {
   entryComponents: [
       MyApp,
       HomePage,
+      MyRoomsPage,
       ChooseRoomPage,
       CreateRoomPage,
-      MessagesPage
+      MessagesPage,
+      MessagesMenu,
+      UsersListPage
   ],
   providers: [
     StatusBar,

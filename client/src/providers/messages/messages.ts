@@ -4,24 +4,21 @@ import { Socket } from 'ng-socket-io';
 @Injectable()
 export class MessagesProvider {
 
-    private _messages;
+    private _messages = [];
 
     constructor(socket: Socket) {
       socket.on('new message', message => {
+          console.log('new message', message);
           this._messages.push(message);
-      });
-
-      socket.on('get messages', messages => {
-          this._messages = messages.messages;
       });
 
   }
 
-    get messages():[{}] {
+    get messages() {
         return this._messages;
     }
 
-    set messages(value: [{}]) {
+    set messages(value) {
         this._messages = value;
     }
 }

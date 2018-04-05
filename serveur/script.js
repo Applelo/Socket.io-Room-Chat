@@ -10,17 +10,23 @@ var users = [];
 //[{
 //          'id" : 1
 //          'username' : 'michel',
-//          'rooms_creator' : [1, 2],
+//          'admin' : [1, 2],
+//          'myRooms' : [1, 2, 3, 4]
 //          }
 //}]
-var rooms = [];
+var rooms = [{
+    'id':1,
+    'name':'test',
+    'numUsers':0,
+    'users':[]
+}];
 //[{
 //     'id': 1,
 //    'name': 'hello',
 //    'numUsers': 1,
 //     'users' : [1, 2, 3, 4],
 //}]
-var messages = {};
+var messages = {'1':[]};
 //{
 //    '1': [{
 //          'message' : 'hello',
@@ -32,11 +38,11 @@ app.get('/', function(req, res){
     res.send('<p></p>');
 });
 
-io.on('connection', function (socket) {
+io.on('connection', socket => {
     var addedUser = false;
 
     // when the client emits 'add user', this listens and executes
-    socket.on('add user', function (username) {
+    socket.on('add user', username => {
         console.log('connection ' + username);
         if (addedUser) return;
 
@@ -45,35 +51,36 @@ io.on('connection', function (socket) {
         users.push({
             id: idUser,
             username: username,
-            rooms_creator: []
+            admin: [],
+            myRooms: []
         });
         idUser++;
         numUsers++;
         addedUser = true;
-        socket.emit('login', {
-            user_id: socket.user_id,
-            users,
-            rooms
-        });
+        socket.emit('login', {user_id: socket.user_id, users, rooms});
         io.sockets.emit('update users', users);//emit to all people
 
+
     });
 
-    socket.on('add room', function(room) {
-        let data = {
+    socket.on('add room', roomName => {
+        let room = {
             id: idRoom,
-            name:room,
-            numUsers: 0
+            name:roomName,
+            numUsers: 0,
+            users: []
         };
 
-        rooms.push(data);
+        rooms.push(room);
         io.sockets.emit('update rooms', rooms);//emit to all people
-        socket.emit('go room', data);//emit only to client
+
         messages[idRoom] = [];
         idRoom++;
+
+        socket.emit('room created', room);//emit only to client
     });
 
-    socket.on('join room', function (room) {
+    socket.on('connect room', room => {
         socket.join(room.id);
         let message = {
             'user_id':0,
@@ -81,27 +88,62 @@ io.on('connection', function (socket) {
         };
         socket.broadcast.in(room.id).emit('new message', message);
         messages[room.id].push(message);
-        socket.emit('get messages', {
-            messages: messages[room.id]
-        });
+
+        rooms.find(x => x.id === room.id).users.push(socket.user_id);
         rooms.find(x => x.id === room.id).numUsers++;
         io.sockets.emit('update rooms', rooms);//emit to all people
+
+        users.find(x => x.id === socket.user_id).myRooms.push(room.id);
+        io.sockets.emit('update users', users);//emit to all people
+
+        socket.emit('go room',
+            {
+                room,
+                messages:messages[room.id]
+            });//emit only to client
     });
 
-    socket.on('leave room', function (room) {
-        socket.leave(room.id);
-        let message =  {
+    socket.on('join room', room => {
+        let message = {
             'user_id':0,
-            'username':'server',
-            'message': users.find(x => x.id === socket.user_id).username + ' leave the room ' + room.name
+            'message': users.find(x => x.id === socket.user_id).username + ' join the room ' + room.name
+        };
+        socket.broadcast.in(room.id).emit('new message', message);
+        messages[room.id].push(message);
+        rooms.find(x => x.id === room.id).numUsers++;
+        io.sockets.emit('update rooms', rooms);//emit to all people
+
+        socket.emit('go room',
+            {
+                room,
+                messages:messages[room.id]
+            });//emit only to client
+    });
+
+    socket.on('leave room', room => {
+        let message =  {
+            'user_id'   :   0,
+            'username'  :   'server',
+            'message'   :   users.find(x => x.id === socket.user_id).username + ' leave the room ' + room.name
         };
         socket.broadcast.in(room.id).emit('new message', message);
         messages[room.id].push(message);
         rooms.find(x => x.id === room.id).numUsers--;
-        io.sockets.emit('update room', rooms);//emit to all people
+        io.sockets.emit('update rooms', rooms);//emit to all people
     });
 
-    socket.on('send message', function(data) {
+    socket.on('quit room', room => {
+        socket.leave(room.id);
+        let myRooms = users.find(x => x.id === socket.user_id).myRooms;
+        console.log(myRooms);
+        myRooms = myRooms.filter(item => item !== room.id);
+        console.log(myRooms);
+        users.find(x => x.id === socket.user_id).myRooms = myRooms;
+        console.log(users);
+        socket.emit('go quit room');
+    });
+
+    socket.on('send message', data => {
         let message =  {
             'user_id': socket.user_id,
             'username': users.find(x => x.id === socket.user_id).username,
@@ -111,29 +153,24 @@ io.on('connection', function (socket) {
         socket.nsp.to(data.room.id).emit('new message', message);
     });
 
-    socket.on('start typing', function(room) {
-        socket.emit('new typing', socket.user_id);
+    socket.on('start typing', roomId => {
+        console.log(roomId);
+        socket.broadcast.to(roomId).emit('new typing', socket.user_id);
     });
 
-    socket.on('stop typing', function(room) {
-        socket.emit('end typing', socket.user_id);
+    socket.on('stop typing', roomId => {
+        console.log(roomId);
+        socket.broadcast.to(roomId).emit('end typing', socket.user_id);
     });
-
-
 
     // when the user disconnects.. perform this
-    socket.on('disconnect', function () {
+    socket.on('disconnect', () => {
         if (addedUser) {
             numUsers--;
             let index = users.indexOf(users.find(x => x.id === socket.user_id));
             users.splice(index, 1);
             io.sockets.emit('update users', users);//emit to all people
 
-            // echo globally that this client has left
-           /* socket.broadcast.emit('user left', {
-                username: users[socket.user_id],
-                numUsers: numUsers
-            });*/
         }
     });
 });

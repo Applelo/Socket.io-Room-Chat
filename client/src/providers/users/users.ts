@@ -5,15 +5,13 @@ import { Injectable } from '@angular/core';
 export class UsersProvider {
 
     private _user_id:number;
-    private _users:[{id:number, username:string, rooms_creator:[number]}];
+    private _users:[{id:number, username:string, admin:[number], myRooms:[number]}];
 
-  constructor(socket: Socket) {
-      socket.on('login', data => {
-          this.user_id = data.user_id;
-          this.users = data.users;
-      });
-
-  }
+    constructor(socket: Socket) {
+        socket.on('update users', users => {
+            this.users = users;
+        });
+    }
 
     get user_id():number {
         return this._user_id;
@@ -23,11 +21,16 @@ export class UsersProvider {
         this._user_id = value;
     }
 
-    get users():[{id:number, username:string, rooms_creator:[number]}] {
+    get userRooms():[number] {
+        console.log(this.users);
+        return this.users.find(x => x.id === this.user_id).myRooms;
+    }
+
+    get users():[{id:number, username:string, admin:[number], myRooms:[number]}] {
         return this._users;
     }
 
-    set users(value:[{id:number, username:string, rooms_creator:[number]}]) {
+    set users(value:[{id:number, username:string, admin:[number], myRooms:[number]}]) {
         this._users = value;
     }
 }

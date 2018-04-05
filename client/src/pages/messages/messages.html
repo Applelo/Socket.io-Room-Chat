@@ -8,6 +8,11 @@
 
   <ion-navbar>
       <ion-title>{{room.name}}</ion-title>
+      <ion-buttons end>
+          <button ion-button icon-only (click)="presentPopover($event)">
+              <ion-icon name="more"></ion-icon>
+          </button>
+      </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -25,7 +30,7 @@
            </ng-template>
       </ion-item>
   </ion-list>
-    <p class="users-typing" [ngClass]="usersTyping !== undefined && usersTyping.length > 0 ? 'active' : ''">{{sentenceTypying}} writing...</p>
+    <p class="users-typing" [ngClass]="usersTyping !== undefined && usersTyping.length > 0 ? 'active' : ''">{{sentenceTypying}}</p>
 </ion-content>
 
 <ion-footer>
@@ -36,9 +41,10 @@
                     <ion-col col-10>
                         <ion-textarea
                                 (input)="typingMessage()"
-                                    name="message"
-                                    formControlName="message"
-                                    placeholder="Entrez votre message ici">
+                                name="message"
+                                [(ngModel)]="message"
+                                formControlName="message"
+                                placeholder="Entrez votre message ici">
                         </ion-textarea>
                     </ion-col>
                     <ion-col col-2>
