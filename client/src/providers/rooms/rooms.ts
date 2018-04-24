@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ng-socket-io';
+import {Events} from "ionic-angular";
+import {UsersProvider} from "../users/users";
 
 @Injectable()
 export class RoomsProvider {
@@ -11,13 +13,34 @@ export class RoomsProvider {
     private _myRoomsId:[number] = [0];
     private _roomsNotJoin;
 
-  constructor(public socket: Socket) {
+  constructor(public socket: Socket, public events: Events, public usersProvider: UsersProvider) {
+  }
+
+  listener() {
       this.socket.on('update rooms', rooms => {
-          this.rooms = rooms;
-          console.log('rooms', rooms);
-          this.refreshMyRooms();
-          this.refreshRoomsNotJoin();
+          console.log('update rooms', rooms);
+          console.log(rooms.length);
+          if (rooms.lenght == 0) {
+              this.socket.emit('need update rooms');
+          }
+          else {
+              this.rooms = rooms;
+              this.refreshMyRooms();
+              this.refreshRoomsNotJoin();
+              console.log("rooms updated");
+              this.events.publish('rooms updated');
+          }
       });
+      this.socket.on('login', response => {
+          this.rooms = response.rooms;
+          this.myRoomsId = this.usersProvider.userRooms;
+      });
+      this.events.subscribe('users updated', () => {
+          if (this.usersProvider.user_id !== undefined) {
+            this.myRoomsId = this.usersProvider.userRooms;
+          }
+      });
+
   }
 
     get rooms() {
@@ -78,7 +101,7 @@ export class RoomsProvider {
 
     refreshMyRooms() {
         this.myRooms = [];
-        if (this.myRoomsId.length > 0 && this.rooms !== undefined) {
+        if (this.myRoomsId != null && this.myRoomsId.length > 0 && this.rooms !== undefined) {
             for (let i = 0; i < this.rooms.length; i++) {
                 for (let j = 0; j < this.myRoomsId.length; j++) {
                     if (this.rooms[i].id == this.myRoomsId[j]) {
@@ -87,6 +110,7 @@ export class RoomsProvider {
                 }
             }
         }
+        console.log("myRooms", this.myRooms);
     }
 
     get roomsNotJoin() {
@@ -99,8 +123,7 @@ export class RoomsProvider {
 
     refreshRoomsNotJoin() {
         this.roomsNotJoin = this.rooms;
-        console.log("roomsNotJoin", this.roomsNotJoin);
-        if (this.myRoomsId.length > 0 && this.rooms !== undefined) {
+        if (this.myRoomsId != null && this.myRoomsId.length > 0 && this.rooms !== undefined) {
             for (let i = 0; i < this.myRoomsId.length; i++) {
                 let index = this.rooms.indexOf(this.rooms.find(x => x.id === this.myRoomsId[i]));
                 this.roomsNotJoin.splice(index, 1);

@@ -16,6 +16,7 @@ import { RoomsProvider } from '../providers/rooms/rooms';
 import { MessagesProvider } from '../providers/messages/messages';
 import { UsersProvider } from '../providers/users/users';
 import {UsersListPage} from "../pages/users-list/users-list";
+import {Push} from "@ionic-native/push";
 const config: SocketIoConfig = {
     url: 'http://localhost:3000',
     options: {}
@@ -54,7 +55,8 @@ const config: SocketIoConfig = {
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     RoomsProvider,
     MessagesProvider,
-    UsersProvider
+    UsersProvider,
+      Push
   ]
 })
 export class AppModule {}

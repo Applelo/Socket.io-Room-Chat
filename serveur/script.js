@@ -3,7 +3,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 //stats
 var numUsers = 0;
-var idRoom = 1;
+var idRoom = 2;
 var idUser = 1;
 
 var users = [];
@@ -57,10 +57,8 @@ io.on('connection', socket => {
         idUser++;
         numUsers++;
         addedUser = true;
-        socket.emit('login', {user_id: socket.user_id, users, rooms});
         io.sockets.emit('update users', users);//emit to all people
-
-
+        socket.emit('login', {user_id: socket.user_id, users, rooms});
     });
 
     socket.on('add room', roomName => {
@@ -129,17 +127,23 @@ io.on('connection', socket => {
         socket.broadcast.in(room.id).emit('new message', message);
         messages[room.id].push(message);
         rooms.find(x => x.id === room.id).numUsers--;
+        io.sockets.emit('update users', users);//emit to all people
         io.sockets.emit('update rooms', rooms);//emit to all people
+        socket.emit('go leave room');
     });
 
     socket.on('quit room', room => {
         socket.leave(room.id);
+        let message =  {
+            'user_id'   :   0,
+            'username'  :   'server',
+            'message'   :   users.find(x => x.id === socket.user_id).username + ' quit the room ' + room.name
+        };
+        socket.broadcast.in(room.id).emit('new message', message);
         let myRooms = users.find(x => x.id === socket.user_id).myRooms;
-        console.log(myRooms);
         myRooms = myRooms.filter(item => item !== room.id);
-        console.log(myRooms);
         users.find(x => x.id === socket.user_id).myRooms = myRooms;
-        console.log(users);
+        io.sockets.emit('update rooms', rooms);//emit to all people
         socket.emit('go quit room');
     });
 
@@ -154,24 +158,26 @@ io.on('connection', socket => {
     });
 
     socket.on('start typing', roomId => {
-        console.log(roomId);
         socket.broadcast.to(roomId).emit('new typing', socket.user_id);
     });
 
     socket.on('stop typing', roomId => {
-        console.log(roomId);
         socket.broadcast.to(roomId).emit('end typing', socket.user_id);
+    });
+
+    socket.on('need update rooms', () => {
+        socket.emit('update rooms', rooms);
     });
 
     // when the user disconnects.. perform this
     socket.on('disconnect', () => {
-        if (addedUser) {
-            numUsers--;
-            let index = users.indexOf(users.find(x => x.id === socket.user_id));
-            users.splice(index, 1);
-            io.sockets.emit('update users', users);//emit to all people
 
-        }
+        console.log('deconnection');
+        numUsers--;
+        let index = users.indexOf(users.find(x => x.id === socket.user_id));
+        users.splice(index, 1);
+        io.sockets.emit('update users', users);//emit to all people
+
     });
 });
 

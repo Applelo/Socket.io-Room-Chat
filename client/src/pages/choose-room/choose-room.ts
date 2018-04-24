@@ -3,7 +3,6 @@ import { NavController} from 'ionic-angular';
 import { Socket } from 'ng-socket-io';
 import {CreateRoomPage} from "../create-room/create-room";
 import {RoomsProvider} from "../../providers/rooms/rooms";
-import {UsersProvider} from "../../providers/users/users";
 
 
 @Component({
@@ -12,9 +11,7 @@ import {UsersProvider} from "../../providers/users/users";
 })
 export class ChooseRoomPage {
     mySearchBar:string="";
-    constructor(public navCtrl: NavController, public socket: Socket, public roomsProvider: RoomsProvider, public usersProvider: UsersProvider) {
-        this.roomsProvider.myRoomsId = this.usersProvider.userRooms;
-        this.roomsProvider.refreshRoomsNotJoin();
+    constructor(public navCtrl: NavController, public socket: Socket, public roomsProvider: RoomsProvider) {
     }
 
     roomSelected(room) {
@@ -24,6 +21,7 @@ export class ChooseRoomPage {
 
     createRoom() {
       this.navCtrl.push(CreateRoomPage);
+
     }
 
     onSearchBarInput() {

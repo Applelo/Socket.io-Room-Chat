@@ -19,11 +19,18 @@ export class HomePage {
             pseudo: ['', Validators.required],
         });
         this.socket.on('login', response => {
-            this.usersProvider.users = response.users;
-            this.usersProvider.user_id = response.user_id;
-            this.roomsProvider.rooms = response.rooms;
             this.navCtrl.push(MyRoomsPage);
         });
+    }
+
+    ionViewWillEnter() {
+        if (this.usersProvider.user_id > 0) {
+            this.usersProvider.users = undefined;
+            this.usersProvider.user_id = undefined;
+            this.roomsProvider.rooms = undefined;
+            this.roomsProvider.myRoomsId = undefined;
+            this.socket.disconnect();
+        }
     }
 
     logForm() {

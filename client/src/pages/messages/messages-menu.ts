@@ -25,12 +25,12 @@ export class MessagesMenu {
     }
 
     showRoomUsers() {
-        let modal = this.modalCtrl.create(UsersListPage, this.data);
-        modal.present();
+        this.modalCtrl.create(UsersListPage, this.data).present();
     }
 
     quitRoom() {
-        this.socket.emit('quit room',  this.data.room);
-        this.viewCtrl.dismiss();
+        this.viewCtrl.dismiss().then(() => {
+            this.socket.emit('quit room',  this.data.room);
+        });
     }
 }

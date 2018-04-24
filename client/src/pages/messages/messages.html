@@ -35,7 +35,7 @@
 
 <ion-footer>
     <ion-toolbar>
-        <form [formGroup]="todo" (ngSubmit)="sendMessage()">
+        <form [formGroup]="todo" (ngSubmit)="sendMessage()" (keydown.enter)="$event.preventDefault(); sendMessage()">
             <ion-grid class="input-wrap">
                 <ion-row>
                     <ion-col col-10>

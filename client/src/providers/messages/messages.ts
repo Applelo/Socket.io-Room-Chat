@@ -6,13 +6,14 @@ export class MessagesProvider {
 
     private _messages = [];
 
-    constructor(socket: Socket) {
-      socket.on('new message', message => {
-          console.log('new message', message);
-          this._messages.push(message);
-      });
+    constructor(public socket: Socket) {}
 
-  }
+    listener() {
+        this.socket.on('new message', message => {
+            console.log('new message', message);
+            this._messages.push(message);
+        });
+    }
 
     get messages() {
         return this._messages;

@@ -5,7 +5,6 @@ import {MessagesProvider} from "../../providers/messages/messages";
 import {MessagesMenu} from "./messages-menu";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UsersProvider} from "../../providers/users/users";
-import {RoomsProvider} from "../../providers/rooms/rooms";
 
 @Component({
   selector: 'page-messages',
@@ -25,7 +24,7 @@ export class MessagesPage {
     constructor(public navCtrl: NavController, public navParams: NavParams,
                 private formBuilder: FormBuilder, public socket: Socket,
                 public popoverCtrl: PopoverController, public messagesProvider: MessagesProvider,
-                public usersProvider: UsersProvider, public roomsProvider: RoomsProvider) {
+                public usersProvider: UsersProvider) {
         this.room = this.navParams.get('room');
         console.log('actual room', this.room);
         this.messagesProvider.messages = this.navParams.get('messages');
@@ -46,18 +45,20 @@ export class MessagesPage {
             this.refreshSentenceTyping();
         });
 
-        this.socket.on('go quit room', () => {
-            this.navCtrl.pop().then(() => {
-                this.socket.emit('leave room', this.room);
-            });
+        this.socket.on('go leave room', () => {
+            this.navCtrl.pop();
         });
+
+        this.socket.on('go quit room', () => {
+            this.socket.emit('leave room', this.room);
+        });
+
+
     }
 
     ionViewDidLoad() {
         this.navBar.backButtonClick = (ev:UIEvent) => {
-            this.navCtrl.pop().then(() => {
-                this.socket.emit('leave room', this.room);
-            });
+            this.socket.emit('leave room', this.room);
         };
     }
 
@@ -82,7 +83,6 @@ export class MessagesPage {
     }
 
     sendMessage() {
-        console.log(this.message);
         let data = {
             room: this.room,
             message: this.todo.value.message
