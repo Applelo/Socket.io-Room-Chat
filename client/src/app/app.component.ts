@@ -7,14 +7,14 @@ import { HomePage } from '../pages/home/home';
 import {UsersProvider} from "../providers/users/users";
 import {MessagesProvider} from "../providers/messages/messages";
 import {RoomsProvider} from "../providers/rooms/rooms";
-import {Push} from "@ionic-native/push";
+
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   rootPage:any = HomePage;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, push: Push,
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen,
               usersProvider: UsersProvider, messagesProvider: MessagesProvider, roomsProvider: RoomsProvider
   ) {
     platform.ready().then(() => {
@@ -27,19 +27,6 @@ export class MyApp {
       usersProvider.listener();
       roomsProvider.listener();
       messagesProvider.listener();
-      if (platform.is('cordova')) {
-          push.hasPermission().then((res: any) => {
-
-              if (res.isEnabled) {
-                  console.log('We have permission to send push notifications');
-              } else {
-                  console.log('We do not have permission to send push notifications');
-              }
-
-          });
-      }
-
-
 
     });
   }

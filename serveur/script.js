@@ -109,6 +109,7 @@ io.on('connection', socket => {
         socket.broadcast.in(room.id).emit('new message', message);
         messages[room.id].push(message);
         rooms.find(x => x.id === room.id).numUsers++;
+
         io.sockets.emit('update rooms', rooms);//emit to all people
 
         socket.emit('go room',
@@ -126,7 +127,7 @@ io.on('connection', socket => {
         };
         socket.broadcast.in(room.id).emit('new message', message);
         messages[room.id].push(message);
-        rooms.find(x => x.id === room.id).numUsers--;
+        rooms.find(x => x.id === room.id).numUsers = (rooms.find(x => x.id === room.id).numUsers === 0) ? 0 : rooms.find(x => x.id === room.id).numUsers - 1;
         io.sockets.emit('update users', users);//emit to all people
         io.sockets.emit('update rooms', rooms);//emit to all people
         socket.emit('go leave room');
