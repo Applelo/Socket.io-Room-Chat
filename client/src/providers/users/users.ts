@@ -34,7 +34,7 @@ export class UsersProvider {
         console.log(this.user_id);
         console.log(this.users);
         console.log(this.users.find(x => x.id === this.user_id).myRooms);
-        return (this.users.find(x => x.id === this.user_id).myRooms != undefined) ? this.users.find(x => x.id === this.user_id).myRooms : [0];
+        return (this.users.find(x => x.id === this.user_id).myRooms !== undefined) ? this.users.find(x => x.id === this.user_id).myRooms : [0];
     }
 
     get users():[{id:number, username:string, admin:[number], myRooms:[number]}] {

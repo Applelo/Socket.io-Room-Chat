@@ -15,8 +15,9 @@ export class ChooseRoomPage {
     }
 
     roomSelected(room) {
-        this.socket.emit('connect room', room);
-        this.navCtrl.pop();
+        this.navCtrl.pop().then(() => {
+            this.socket.emit('connect room', room);
+        });
     }
 
     createRoom() {

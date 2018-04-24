@@ -45,14 +45,17 @@ export class MessagesPage {
             this.refreshSentenceTyping();
         });
 
-        this.socket.on('go leave room', () => {
-            this.navCtrl.pop();
-        });
-
+        socket.removeListener('go quit room');
         this.socket.on('go quit room', () => {
             this.socket.emit('leave room', this.room);
         });
 
+        socket.removeListener('go leave room');
+        this.socket.on('go leave room', () => {
+
+            this.navCtrl.pop();
+
+        });
 
     }
 

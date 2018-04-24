@@ -15,6 +15,7 @@ export class MyRoomsPage {
   constructor(public navCtrl: NavController, public socket: Socket, event:Events,
               public roomsProvider: RoomsProvider, public usersProvider: UsersProvider) {
 
+      socket.removeListener('go room');
       this.socket.on('go room', data => {
           this.navCtrl.push(MessagesPage, data);
       });
@@ -25,13 +26,12 @@ export class MyRoomsPage {
       this.navCtrl.push(ChooseRoomPage);
   }
 
-    logout() {
-        this.socket.disconnect();
-        this.navCtrl.popToRoot();
-    }
+  logout() {
+      this.navCtrl.popToRoot();
+  }
 
-    roomSelected(room) {
-        this.socket.emit('join room', room);
-    }
+  roomSelected(room) {
+      this.socket.emit('join room', room);
+  }
 
 }
