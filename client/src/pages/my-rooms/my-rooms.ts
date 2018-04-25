@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {Events, NavController} from 'ionic-angular';
+import {NavController} from 'ionic-angular';
 import {ChooseRoomPage} from "../choose-room/choose-room";
 import {RoomsProvider} from "../../providers/rooms/rooms";
 import {UsersProvider} from "../../providers/users/users";
@@ -12,7 +12,7 @@ import {MessagesPage} from "../messages/messages";
 })
 export class MyRoomsPage {
 
-  constructor(public navCtrl: NavController, public socket: Socket, event:Events,
+  constructor(public navCtrl: NavController, public socket: Socket,
               public roomsProvider: RoomsProvider, public usersProvider: UsersProvider) {
 
       socket.removeListener('go room');
