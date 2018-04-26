@@ -130,10 +130,17 @@ io.on('connection', socket => {
             'message'   :   users.find(x => x.id === socket.user_id).username + ' quit the room ' + room.name
         };
         socket.broadcast.in(room.id).emit('new message', message);
+
         let myRooms = users.find(x => x.id === socket.user_id).myRooms;
         myRooms = myRooms.filter(item => item !== room.id);
         users.find(x => x.id === socket.user_id).myRooms = myRooms;
+        io.sockets.emit('update users', rooms);//emit to all people
+
+        let idUsers = rooms.find(x => x.id === room.id).users;
+        idUsers = idUsers.filter(item => item !== socket.user_id);
+        rooms.find(x => x.id === room.id).users = idUsers;
         io.sockets.emit('update rooms', rooms);//emit to all people
+
         socket.emit('go quit room');
     });
 
@@ -168,9 +175,8 @@ io.on('connection', socket => {
 
         console.log('deconnection');
         numUsers--;
-        let index = users.indexOf(users.find(x => x.id === socket.user_id));
-        users.splice(index, 1);
-        io.sockets.emit('update users', users);//emit to all people
+
+
 
     });
 });

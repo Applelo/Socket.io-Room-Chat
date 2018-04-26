@@ -1,6 +1,7 @@
 import { Socket } from 'ng-socket-io';
 import { Injectable } from '@angular/core';
 import {Events} from "ionic-angular";
+import {RoomsProvider} from "../rooms/rooms";
 
 
 @Injectable()
@@ -9,7 +10,7 @@ export class UsersProvider {
     private _user_id:number;
     private _users:[{id:number, username:string, myRooms:[number]}];
 
-    constructor(public socket: Socket, public events: Events) {}
+    constructor(public socket: Socket, public roomsProvider: RoomsProvider, public events: Events) {}
 
     listener() {
         this.socket.on('update users', users => {
@@ -19,6 +20,9 @@ export class UsersProvider {
             }
             else {
                 this.users = users;
+                if (this.user_id !== undefined) {
+                    this.roomsProvider.myRoomsId = this.userRooms;
+                }
                 this.events.publish('users updated');
             }
         });

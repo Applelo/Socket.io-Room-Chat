@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ng-socket-io';
 import {Events} from "ionic-angular";
-import {UsersProvider} from "../users/users";
 
 @Injectable()
 export class RoomsProvider {
@@ -10,11 +9,10 @@ export class RoomsProvider {
     private _searchWord:string = "";
     private _searchRooms;
     private _myRooms;
-    private _myRoomsId:[number] = [0];
+    private _myRoomsId:[number];
     private _roomsNotJoin;
 
-  constructor(public socket: Socket, public events: Events, public usersProvider: UsersProvider) {
-  }
+  constructor(public socket: Socket, public events: Events) {}
 
   listener() {
       this.socket.on('update rooms', rooms => {
@@ -29,11 +27,6 @@ export class RoomsProvider {
               this.refreshRoomsNotJoin();
 
               this.events.publish('rooms updated');
-          }
-      });
-      this.events.subscribe('users updated', () => {
-          if (this.usersProvider.user_id !== undefined) {
-            this.myRoomsId = this.usersProvider.userRooms;
           }
       });
 
@@ -65,8 +58,8 @@ export class RoomsProvider {
         this._searchRooms = value;
     }
 
-    refreshSearchRooms() {
-      this.searchRooms = [];
+   refreshSearchRooms() {
+       this.searchRooms = [];
       if (this.searchWord && this.rooms !== undefined) {
         for (let i = 0; i < this.rooms.length; i++) {
             if (this.rooms[i].name.toLowerCase().includes(this.searchWord)) {
