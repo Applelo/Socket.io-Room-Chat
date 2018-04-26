@@ -7,17 +7,23 @@ import {Events} from "ionic-angular";
 export class UsersProvider {
 
     private _user_id:number;
-    private _users:[{id:number, username:string, admin:[number], myRooms:[number]}];
+    private _users:[{id:number, username:string, myRooms:[number]}];
 
     constructor(public socket: Socket, public events: Events) {}
 
     listener() {
         this.socket.on('update users', users => {
-            this.users = users;
-            this.events.publish('users updated');
+            if (users.lenght == 0) {
+                //prevent error
+                this.socket.emit('need update users');
+            }
+            else {
+                this.users = users;
+                this.events.publish('users updated');
+            }
         });
-        this.socket.on('login', response => {
-            this.user_id = response.user_id;
+        this.socket.on('login', user_id => {
+            this.user_id = user_id;
         });
     }
 
@@ -30,18 +36,14 @@ export class UsersProvider {
     }
 
     get userRooms():[number] {
-        console.log("hello");
-        console.log(this.user_id);
-        console.log(this.users);
-        console.log(this.users.find(x => x.id === this.user_id).myRooms);
         return (this.users.find(x => x.id === this.user_id).myRooms !== undefined) ? this.users.find(x => x.id === this.user_id).myRooms : [0];
     }
 
-    get users():[{id:number, username:string, admin:[number], myRooms:[number]}] {
+    get users():[{id:number, username:string, myRooms:[number]}] {
         return this._users;
     }
 
-    set users(value:[{id:number, username:string, admin:[number], myRooms:[number]}]) {
+    set users(value:[{id:number, username:string, myRooms:[number]}]) {
         this._users = value;
     }
 }

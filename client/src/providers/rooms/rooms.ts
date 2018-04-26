@@ -18,22 +18,18 @@ export class RoomsProvider {
 
   listener() {
       this.socket.on('update rooms', rooms => {
-          console.log('update rooms', rooms);
-          console.log(rooms.length);
+
           if (rooms.lenght == 0) {
+              //prevent error
               this.socket.emit('need update rooms');
           }
           else {
               this.rooms = rooms;
               this.refreshMyRooms();
               this.refreshRoomsNotJoin();
-              console.log("rooms updated");
+
               this.events.publish('rooms updated');
           }
-      });
-      this.socket.on('login', response => {
-          this.rooms = response.rooms;
-          this.myRoomsId = this.usersProvider.userRooms;
       });
       this.events.subscribe('users updated', () => {
           if (this.usersProvider.user_id !== undefined) {
@@ -110,7 +106,7 @@ export class RoomsProvider {
                 }
             }
         }
-        console.log("myRooms", this.myRooms);
+
     }
 
     get roomsNotJoin() {
@@ -129,7 +125,7 @@ export class RoomsProvider {
                 this.roomsNotJoin.splice(index, 1);
             }
         }
-        console.log("roomsNotJoin", this.roomsNotJoin);
+
     }
 
     /*endregion*/

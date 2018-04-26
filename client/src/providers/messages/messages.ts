@@ -10,7 +10,6 @@ export class MessagesProvider {
 
     listener() {
         this.socket.on('new message', message => {
-            console.log('new message', message);
             this._messages.push(message);
         });
     }

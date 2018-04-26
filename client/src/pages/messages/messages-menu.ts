@@ -8,7 +8,7 @@ import {Socket} from "ng-socket-io";
     template: `
     <ion-list>
       <ion-list-header>Room settings</ion-list-header>
-      <button ion-item (click)="showRoomUsers()">Users connected</button>
+      <!--<button ion-item (click)="showRoomUsers()">Users connected</button>-->
       <button ion-item (click)="quitRoom()">Quit the room</button>
     </ion-list>
   `

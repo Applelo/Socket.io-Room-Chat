@@ -1,64 +1,54 @@
-const app = require('express')();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(3000);
 //stats
-var numUsers = 0;
-var idRoom = 2;
-var idUser = 1;
+let numUsers = 0;
+let idRoom = 2;
+let idUser = 1;
 
-var users = [];
-//[{
-//          'id" : 1
-//          'username' : 'michel',
-//          'admin' : [1, 2],
-//          'myRooms' : [1, 2, 3, 4]
-//          }
-//}]
-var rooms = [{
+let users = [];
+/*[{
+          "id" : 1
+          "username" : "michel",
+          "myRooms" : [1, 2, 3, 4]
+
+}]*/
+let rooms = [{
     'id':1,
     'name':'test',
     'numUsers':0,
     'users':[]
 }];
-//[{
-//     'id': 1,
-//    'name': 'hello',
-//    'numUsers': 1,
-//     'users' : [1, 2, 3, 4],
-//}]
-var messages = {'1':[]};
-//{
-//    '1': [{
-//          'message' : 'hello',
-//          'user_id' : 1, //if 0 is server send message type
-//          }]
-//}]
+/*[{
+    "id": 1,
+    "name": "hello",
+   "numUsers": 1,
+    "users" : [1, 2, 3, 4],
+}]*/
+let messages = {'1':[]};
+/*{
+    "1": [{
+         "message" : "hello",
+         "user_id" : 1, //if 0 is server send message type
+          }]
+}*/
 
-app.get('/', function(req, res){
-    res.send('<p></p>');
-});
 
 io.on('connection', socket => {
-    var addedUser = false;
 
-    // when the client emits 'add user', this listens and executes
     socket.on('add user', username => {
         console.log('connection ' + username);
-        if (addedUser) return;
 
-        // we store the username in the socket session for this client
         socket.user_id = idUser;
         users.push({
             id: idUser,
             username: username,
-            admin: [],
             myRooms: []
         });
         idUser++;
         numUsers++;
-        addedUser = true;
+
         io.sockets.emit('update users', users);//emit to all people
-        socket.emit('login', {user_id: socket.user_id, users, rooms});
+        socket.emit('update rooms', rooms);//emit only for client
+        socket.emit('login', socket.user_id);
     });
 
     socket.on('add room', roomName => {
@@ -128,7 +118,6 @@ io.on('connection', socket => {
         socket.broadcast.in(room.id).emit('new message', message);
         messages[room.id].push(message);
         rooms.find(x => x.id === room.id).numUsers = (rooms.find(x => x.id === room.id).numUsers === 0) ? 0 : rooms.find(x => x.id === room.id).numUsers - 1;
-        io.sockets.emit('update users', users);//emit to all people
         io.sockets.emit('update rooms', rooms);//emit to all people
         socket.emit('go leave room');
     });
@@ -170,6 +159,10 @@ io.on('connection', socket => {
         socket.emit('update rooms', rooms);
     });
 
+    socket.on('need update users', () => {
+        socket.emit('update users', users);
+    });
+
     // when the user disconnects.. perform this
     socket.on('disconnect', () => {
 
@@ -180,9 +173,4 @@ io.on('connection', socket => {
         io.sockets.emit('update users', users);//emit to all people
 
     });
-});
-
-
-http.listen(3000, function(){
-    console.log('listening on *:3000');
 });

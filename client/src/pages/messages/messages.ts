@@ -26,7 +26,7 @@ export class MessagesPage {
                 public popoverCtrl: PopoverController, public messagesProvider: MessagesProvider,
                 public usersProvider: UsersProvider) {
         this.room = this.navParams.get('room');
-        console.log('actual room', this.room);
+
         this.messagesProvider.messages = this.navParams.get('messages');
 
         this.todo = this.formBuilder.group({
