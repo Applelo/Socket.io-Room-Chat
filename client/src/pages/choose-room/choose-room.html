@@ -1,0 +1,27 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Choose room</ion-title>
+  </ion-navbar>
+
+
+</ion-header>
+
+<ion-content padding>
+    <ion-searchbar
+            [(ngModel)]="mySearchBar"
+            (ionInput)="onSearchBarInput()"
+            [showCancelButton]="shouldShowCancel"
+    >
+    </ion-searchbar>
+    <ion-list>
+        <button ion-item *ngFor="let room of (mySearchBar.length > 0) ? roomsProvider.searchRooms : roomsProvider.roomsNotJoin" (click)="roomSelected(room)">
+            <h2>{{ room.name }}</h2>
+            <p>Number of participants : {{ room.numUsers }}</p>
+        </button>
+    </ion-list>
+    <div class="bottom-button">
+        <button ion-button block (click)="createRoom()">Create Room</button>
+    </div>
+
+</ion-content>

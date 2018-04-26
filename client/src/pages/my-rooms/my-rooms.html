@@ -1,0 +1,27 @@
+<ion-header>
+
+  <ion-navbar hideBackButton="true">
+    <ion-title>My Rooms</ion-title>
+      <ion-buttons end>
+          <button (click)="logout()" ion-button icon-only>
+              Logout <ion-icon name="log-out"></ion-icon>
+          </button>
+      </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+ <ion-list>
+    <button ion-item *ngFor="let room of roomsProvider.myRooms" (click)="roomSelected(room)">
+      <h2>{{ room.name }}</h2>
+      <p>Number of participants : {{ room.numUsers }}</p>
+    </button>
+  </ion-list>
+
+  <ion-fab right bottom>
+    <button ion-fab (click)="addRoom()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+</ion-content>

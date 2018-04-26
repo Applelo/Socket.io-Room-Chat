@@ -1,0 +1,26 @@
+page-choose-room {
+  ion-content ion-list.list {
+    padding-bottom: calc(3.6rem + 32px);
+  }
+  div.bottom-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 16px 0px;
+    transform: translateX(-16px);
+    background-color: white;
+    box-shadow: 0px 15px 10px 10px black;
+    button {
+      width: calc(100% - 32px);
+    }
+
+  }
+
+  ion-searchbar {
+    transform: translate(-16px,-16px);
+    width: calc(100% + 32px);
+  }
+}
