@@ -20,6 +20,7 @@ export class UsersProvider {
             }
             else {
                 this.users = users;
+
                 if (this.user_id !== undefined) {
                     this.roomsProvider.myRoomsId = this.userRooms;
                 }
@@ -28,6 +29,7 @@ export class UsersProvider {
         });
         this.socket.on('login', user_id => {
             this.user_id = user_id;
+            this.roomsProvider.myRoomsId = this.userRooms;
         });
     }
 
@@ -39,8 +41,8 @@ export class UsersProvider {
         this._user_id = value;
     }
 
-    get userRooms():[number] {
-        return (this.users.find(x => x.id === this.user_id).myRooms !== undefined) ? this.users.find(x => x.id === this.user_id).myRooms : [0];
+    get userRooms() {
+        return (this.users.find(x => x.id === this.user_id).myRooms !== undefined) ? this.users.find(x => x.id === this.user_id).myRooms : [];
     }
 
     get users():[{id:number, username:string, myRooms:[number]}] {

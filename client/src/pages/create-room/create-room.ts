@@ -16,6 +16,7 @@ export class CreateRoomPage {
             name: ['', Validators.required],
         });
 
+        this.socket.removeListener('room created');
         this.socket.on('room created', room => {
             this.navCtrl.pop().then(() => {
                 this.navCtrl.pop().then(() => {

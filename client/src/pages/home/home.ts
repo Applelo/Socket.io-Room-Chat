@@ -18,6 +18,8 @@ export class HomePage {
         this.todo = this.formBuilder.group({
             pseudo: ['', Validators.required],
         });
+
+        this.socket.removeListener('login');
         this.socket.on('login', () => {
             this.navCtrl.push(MyRoomsPage);
         });

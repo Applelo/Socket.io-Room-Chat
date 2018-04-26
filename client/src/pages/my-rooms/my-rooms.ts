@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import {NavController} from 'ionic-angular';
 import {ChooseRoomPage} from "../choose-room/choose-room";
 import {RoomsProvider} from "../../providers/rooms/rooms";
-import {UsersProvider} from "../../providers/users/users";
 import {Socket} from 'ng-socket-io';
 import {MessagesPage} from "../messages/messages";
 
@@ -13,7 +12,7 @@ import {MessagesPage} from "../messages/messages";
 export class MyRoomsPage {
 
   constructor(public navCtrl: NavController, public socket: Socket,
-              public roomsProvider: RoomsProvider, public usersProvider: UsersProvider) {
+              public roomsProvider: RoomsProvider) {
 
       socket.removeListener('go room');
       this.socket.on('go room', data => {

@@ -134,7 +134,7 @@ io.on('connection', socket => {
         let myRooms = users.find(x => x.id === socket.user_id).myRooms;
         myRooms = myRooms.filter(item => item !== room.id);
         users.find(x => x.id === socket.user_id).myRooms = myRooms;
-        io.sockets.emit('update users', rooms);//emit to all people
+        io.sockets.emit('update users', users);//emit to all people
 
         let idUsers = rooms.find(x => x.id === room.id).users;
         idUsers = idUsers.filter(item => item !== socket.user_id);
